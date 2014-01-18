@@ -18,7 +18,7 @@ Command Options:
 ("-i","--ignoredates",action="store_true",help="Ignore modified dates and upload all files")    
 ("-t","--threads",default=1,type=int,help="The number of threads to use to upload files")    
 
-Class Usage Example
+Class Usage Example:
 
     import s3uploader
     uploader = S3Uploader(args.api,args.secret)
