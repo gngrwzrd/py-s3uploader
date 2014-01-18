@@ -2,7 +2,9 @@ Upload a directory, optionally do recursive uploads, or upload a single file.
 
 It also accepts a thread count when uploading a directory for multiple files at once.
 
-It requires boto from Amazon.
+It requires boto from Amazon:
+
+    sudo easy_install boto
 
 Options:
  
