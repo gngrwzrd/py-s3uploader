@@ -1,6 +1,6 @@
 Upload a directory, optionally do recursive uploads, or upload a single file.
 
-It also accepts a thread count to upload multiple files at once over a few S3Connections.
+It also accepts a thread count when uploading a directory for multiple files at once.
 
 It requires boto from Amazon.
 
