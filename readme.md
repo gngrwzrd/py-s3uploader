@@ -6,7 +6,7 @@ It requires boto from Amazon:
 
     sudo easy_install boto
 
-Options:
+Command Options:
  
 ("-a","--api",help="S3 API Key")    
 ("-s","--secret",help="S3 Secret")    
