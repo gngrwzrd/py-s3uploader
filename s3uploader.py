@@ -63,6 +63,7 @@ class S3Uploader:
 				thread.start()
 		elif threadcount == 1:
 			thread = Thread(target=self._upload_dir,args=(bucket,bucketbasepath,dirsource,files,ignoredates))
+			threads.append(thread)
 			thread.start()
 		for thread in threads:
 			thread.join()
