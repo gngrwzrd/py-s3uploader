@@ -44,9 +44,9 @@ class S3Uploader:
 		files = []
 		if recursive: files = self._get_files_recursive(bucketbasepath,dirsource)
 		else: files = self._get_files(bucketbasepath,dirsource)
+		threads = []
 		if(threadcount > 1):
 			c = math.ceil(float(len(files))/threadcount)
-			threads = []
 			thread_pairs = []
 			for i in range(int(c)):
 				thread_pairs.append([])
@@ -143,8 +143,8 @@ if __name__ == "__main__":
 	parser.add_argument("-i","--ignoredates",action="store_true",help="Ignore modified dates and upload all files")
 	parser.add_argument("-t","--threads",default=1,type=int,help="The number of threads to use to upload files")
 	args = parser.parse_args()
-	s3sync = S3Uploader(args.api,args.secret)
+	uploader = S3Uploader(args.api,args.secret)
 	if args.source:
-		s3sync.upload_dir(args.bucket,args.bucketpath,args.source,args.recursive,args.threads,args.ignoredates)
+		uploader.upload_dir(args.bucket,args.bucketpath,args.source,args.recursive,args.threads,args.ignoredates)
 	elif args.file:
-		s3sync.upload_file(args.bucket,args.bucketpath,args.file,args.ignoredates)
+		uploader.upload_file(args.bucket,args.bucketpath,args.file,args.ignoredates)
