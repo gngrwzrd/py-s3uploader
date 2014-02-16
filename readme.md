@@ -21,13 +21,13 @@ Command Options:
 Command Usage Examples:
 
 Recursively upload files from local/folder/ to S3 mybucket/s3/folder/    
-./py-s3uploader -a "MYAPI" -s "SECRET" -d "local/folder/" -b "mybucket" -p "s3/folder/" -i -r -t 3
+    ./py-s3uploader -a "MYAPI" -s "SECRET" -d "local/folder/" -b "mybucket" -p "s3/folder/" -i -r -t 3
 
 Recursively upload newer files from local/folder/ to S3 mybucket/s3/folder/    
-./py-s3uploader -a "MYAPI" -s "SECRET" -d "local/folder/" -b "mybucket" -p "s3/folder/" -r -t 3
+    ./py-s3uploader -a "MYAPI" -s "SECRET" -d "local/folder/" -b "mybucket" -p "s3/folder/" -r -t 3
 
 Upload a single file:    
-./py-s3uploader -a "MYAPI" -s "SECRET" -f "local/file.txt" -b "mybucket" -p "s3/folder/file.txt"
+    ./py-s3uploader -a "MYAPI" -s "SECRET" -f "local/file.txt" -b "mybucket" -p "s3/folder/file.txt"
 
 Class Usage Example:
 
