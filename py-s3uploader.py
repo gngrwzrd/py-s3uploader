@@ -48,9 +48,9 @@ class S3Uploader:
 		if(threadcount > 1):
 			c = math.ceil(float(len(files))/threadcount)
 			thread_pairs = []
-			for i in range(int(c)):
+			for i in range(int(threadcount)):
 				thread_pairs.append([])
-				for j in range(threadcount):
+				for j in range(int(c)):
 					try:
 						pair = files.pop()
 						thread_pairs[i].append(pair)
@@ -90,7 +90,7 @@ class S3Uploader:
 		if s3date and lcdate > s3date: upload = True
 		if ignoredates: upload = True
 		if upload:
-			print "%s => %s" % (localfile,bucketfile)
+			print "%s %s => %s" % (bucket.name,localfile,bucketfile)
 			s3key.set_metadata("date",str(int(time.time())))
 			s3key.set_contents_from_filename(localfile)
 	
@@ -148,3 +148,5 @@ if __name__ == "__main__":
 		uploader.upload_dir(args.bucket,args.bucketpath,args.source,args.recursive,args.threads,args.ignoredates)
 	elif args.file:
 		uploader.upload_file(args.bucket,args.bucketpath,args.file,args.ignoredates)
+	else:
+		print "py-s3uploader -h"
