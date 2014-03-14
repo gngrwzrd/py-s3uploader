@@ -86,7 +86,7 @@ class S3Uploader:
 						thread_pairs[i].append(pair)
 					except Exception as e:
 						pass
-			for i in range(len(thread_pairs)):
+			for i in range(threadcount):
 				pairs = thread_pairs[i]
 				thread = Thread(target=self._upload_dir,args=(bucket,bucketbasepath,dirsource,pairs,ignoredates))
 				threads.append(thread)
