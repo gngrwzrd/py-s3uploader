@@ -35,11 +35,41 @@ s3uploader.py \
 class S3Uploader:
 	api = None
 	secret = None
+	dryrun = False
+	filetype_meta = {} #=> dictionary of array of dictionaries. Example: ({"css":[{"content-type":"text/css"}]})
 	
 	def __init__(self,api,secret):
 		self.api = api
 		self.secret = secret
-	
+		self._init_default_metas()
+
+	def _init_default_metas(self):
+		self.set_metadata_for_filetype("css",{"Content-Type":"text/css"})
+		self.set_metadata_for_filetype("html",{"Content-Type":"text/html"})
+		self.set_metadata_for_filetype("js",{"Content-Type":"application/javascript"})
+		self.set_metadata_for_filetype("jpg",{"Content-Type":"image/jpeg"})
+		self.set_metadata_for_filetype("jpeg",{"Content-Type":"image/jpeg"})
+		self.set_metadata_for_filetype("json",{"Content-Type":"application/json"})
+		self.set_metadata_for_filetype("mp4",{"Content-Type":"video/mp4"})
+		self.set_metadata_for_filetype("ogg",{"Content-Type":"application/ogg"})
+		self.set_metadata_for_filetype("otf",{"Content-Type":"application/x-font-otf"})
+		self.set_metadata_for_filetype("png",{"Content-Type":"image/png"})
+		self.set_metadata_for_filetype("txt",{"Content-Type":"text/plain"})
+		self.set_metadata_for_filetype("webm",{"Content-Type":"video/webm"})
+		self.set_metadata_for_filetype("xml",{"Content-Type":"application/xml"})
+		self.set_metadata_for_filetype("zip",{"Content-Type":"application/zip"})
+
+	def set_metadata_for_filetype(self,filetype,meta):
+		mta = self.get_metadata_for_filtetype(filetype)
+		if mta:
+			mta.append(meta)
+		else:
+			self.filetype_meta[filetype] = []
+			self.filetype_meta[filetype].append(meta)
+
+	def get_metadata_for_filtetype(self,filetype):
+		return self.filetype_meta.get(filetype,None)
+
 	def upload_dir(self,bucket,bucketbasepath,dirsource,recursive,threadcount,ignoredates):
 		files = []
 		if recursive: files = self._get_files_recursive(bucketbasepath,dirsource)
@@ -90,9 +120,19 @@ class S3Uploader:
 		if s3date and lcdate > s3date: upload = True
 		if ignoredates: upload = True
 		if upload:
-			print "%s %s => %s" % (bucket.name,localfile,bucketfile)
-			s3key.set_metadata("date",str(int(time.time())))
-			s3key.set_contents_from_filename(localfile)
+			if self.dryrun: print "dry-run. %s : %s => %s" % (bucket.name,localfile,bucketfile)
+			else: print "%s : %s => %s" % (bucket.name,localfile,bucketfile)
+			filetype = localfile.split(".")[-1]
+			meta = self.get_metadata_for_filtetype(filetype)
+			if meta:
+				for metadata in meta:
+					for key in metadata:
+						print "    => metdata: %s:%s" % (key,metadata[key])
+						if not self.dryrun:
+							s3key.set_metadata(key,metadata[key])
+			if not self.dryrun:
+				s3key.set_metadata("date",str(int(time.time())))
+				s3key.set_contents_from_filename(localfile)
 	
 	def _upload_dir(self,bucket,bucketpath,dirsource,files,ignoredates):
 		s3connection = S3Connection(self.api,self.secret)
