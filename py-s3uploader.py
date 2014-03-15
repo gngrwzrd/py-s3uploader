@@ -119,20 +119,20 @@ class S3Uploader:
 		if not s3date: upload = True
 		if s3date and lcdate > s3date: upload = True
 		if ignoredates: upload = True
-		if upload:
-			if self.dryrun: print "dry-run. %s : %s => %s" % (bucket.name,localfile,bucketfile)
-			else: print "%s : %s => %s" % (bucket.name,localfile,bucketfile)
-			filetype = localfile.split(".")[-1]
-			meta = self.get_metadata_for_filtetype(filetype)
-			if meta:
-				for metadata in meta:
-					for key in metadata:
-						print "    => metdata: %s:%s" % (key,metadata[key])
-						if not self.dryrun:
-							s3key.set_metadata(key,metadata[key])
-			if not self.dryrun:
-				s3key.set_metadata("date",str(int(time.time())))
-				s3key.set_contents_from_filename(localfile)
+		if not upload: return ## don't upload, return
+		if self.dryrun: print "dry-run. %s : %s => %s" % (bucket.name,localfile,bucketfile)
+		else: print "%s : %s => %s" % (bucket.name,localfile,bucketfile)
+		filetype = localfile.split(".")[-1]
+		meta = self.get_metadata_for_filtetype(filetype)
+		if meta:
+			for metadata in meta:
+				for key in metadata:
+					print "    => metdata: %s:%s" % (key,metadata[key])
+					if not self.dryrun:
+						s3key.set_metadata(key,metadata[key])
+		if not self.dryrun:
+			s3key.set_metadata("date",str(int(time.time())))
+			s3key.set_contents_from_filename(localfile)
 	
 	def _upload_dir(self,bucket,bucketpath,dirsource,files,ignoredates):
 		s3connection = S3Connection(self.api,self.secret)
